@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col s12 m10 l8 offset-m1 offset-l2">
+            <div class="card-panel">
+                <span class="card-title"><h4><b>{{ current_user.username }}'s</b> Account</h4></span>
+                <h6>E-mail: <b>{{ current_user.email }}</b></h6>
+                <br>
+                <a href="{{ url_for('users.edit') }}" class="btn indigo accent-3">Edit</a>
+                <a href="{{ url_for('users.change_password') }}" class="btn indigo accent-3">Change Password</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

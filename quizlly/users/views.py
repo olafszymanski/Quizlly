@@ -1,8 +1,9 @@
 from quizlly import bcrypt, db
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import login_user, current_user, logout_user
-from .forms import SignUpForm, LogInForm
+from flask_login import login_user, current_user, logout_user, login_required
+from .forms import SignUpForm, LogInForm, EditForm, ChangePasswordForm
 from .models import User
+from .utils import remove_whitespaces
 
 
 users = Blueprint('users', __name__)
@@ -15,10 +16,12 @@ def signup():
     if form.validate_on_submit():
         password = bcrypt.generate_password_hash(form.password.data)
 
-        user = User(form.username.data, form.email.data, password)
+        user = User(remove_whitespaces(form.username.data), remove_whitespaces(form.email.data), password)
 
         db.session.add(user)
         db.session.commit()
+
+        login_user(user)
 
         flash('Your account has been created successfully!', 'success')
 
@@ -60,3 +63,48 @@ def logout():
         logout_user()
 
     return redirect(url_for('main.home'))
+
+
+@users.route('/account')
+@login_required
+def account():
+    return render_template('users/account.html', title='Account')
+
+
+@users.route('/account/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = EditForm()
+
+    if request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    if form.validate_on_submit():
+        current_user.username = remove_whitespaces(form.username.data)
+        current_user.email = remove_whitespaces(form.email.data)
+
+        db.session.commit()
+
+        flash('Your profile has been successfully edited!', 'success')
+
+        return redirect(url_for('users.account'))
+
+    return render_template('users/edit.html', title='Edit Account', form=form)
+
+
+@users.route('/account/password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        current_user.password = bcrypt.generate_password_hash(form.password.data)
+
+        db.session.commit()
+
+        flash('Your password has been successfully changed!', 'success')
+
+        return redirect(url_for('users.account'))
+
+    return render_template('users/change_password.html', title='Change Password', form=form)

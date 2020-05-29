@@ -23,7 +23,7 @@
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     {% if current_user.is_authenticated %}
-                        <li><a href="#"><i class="material-icons left">person_add</i>Account</a></li>
+                        <li><a href="{{ url_for('users.account') }}"><i class="material-icons left">person</i>Account</a></li>
                         <li><a href="{{ url_for('users.logout') }}"><i class="material-icons left">exit_to_app</i>Log Out</a></li>
                     {% else %}
                         <li><a href="{{ url_for('users.signup') }}"><i class="material-icons left">person_add</i>Sign Up</a></li>
@@ -37,7 +37,7 @@
     <ul class="sidenav" id="mobile-demo">
         <li><a href="{{ url_for('main.home') }}" class="mobile-logo center">Quizlly</a></li>
         {% if current_user.is_authenticated %}
-            <li><a href="#"><i class="material-icons left">person_add</i>Account</a></li>
+            <li><a href="{{ url_for('users.account') }}"><i class="material-icons left">person</i>Account</a></li>
             <li><a href="{{ url_for('users.logout') }}"><i class="material-icons left">exit_to_app</i>Log Out</a></li>
         {% else %}
             <li><a href="{{ url_for('users.signup') }}"><i class="material-icons left">person_add</i>Sign Up</a></li>
@@ -47,7 +47,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col s12 m10 l8 offset-l2 offset-m1">
+            <div class="col s12 m10 l8 offset-m1 offset-l2">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
