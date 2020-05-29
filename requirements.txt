@@ -1,2 +1,9 @@
 flask
 flask-sqlalchemy
+mysqlclient
+flask-wtf
+wtforms
+email-validator
+flask-bcrypt
+bcrypt
+flask-login

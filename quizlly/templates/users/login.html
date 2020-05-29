@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <h4>Log In</h4>
+        <form action="" method="post" class="col s12">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="input-field col s12">
+                    {{ form.username_or_email.label }}
+                    {{ form.username_or_email(class='validate') }}
+                    {% if form.username_or_email.errors %}
+                        {% for error in form.username_or_email.errors %}
+                            <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="input-field col s12">
+                    {{ form.password.label }}
+                    {{ form.password(class='validate') }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="row center">
+                    {{ form.submit(class='btn btn-large indigo accent-3') }}
+                </div>
+                <small class="text-muted right">Don't have an account? <a href="{{ url_for('users.signup') }}">Sign Up</a></small>
+            </div>
+        </form>
+    </div>
+{% endblock %}
