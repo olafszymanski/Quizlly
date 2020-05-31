@@ -21,7 +21,7 @@
                         <small class="text-muted">By @{{ quiz.user.username }}</small>
                     </div>
                     <div class="card-action">
-                        <a href="#" class="btn indigo accent-3">Take</a>
+                        <a href="{{ url_for('quizzes.quiz', quiz_id=quiz.id) }}" class="btn indigo accent-3">Take</a>
                     </div>
                 </div>
             </div>

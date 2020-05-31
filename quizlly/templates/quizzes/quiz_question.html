@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col s12 m10 l8 offset-m1 offset-l2">
+            <div class="card-panel">
+                <span class="card-title"><b>{{ question['question'] }}</b></span>
+                <p>1. {{ question.option_1 }}</p>
+                <p>2. {{ question.option_2 }}</p>
+                {% if question.option_3 %}
+                    <p>3. {{ question.option_3 }}</p>
+                {% endif %}
+                {% if session.get('quiz_question_id') == questions_length - 1 %}
+                    <form action="{{ url_for('quizzes.quiz_finish', quiz_id=session.get('quiz_id')) }}" method="post">
+                {% else %}
+                    <form action="{{ url_for('quizzes.quiz_question', quiz_id=session.get('quiz_id'), question_id=(session.get('quiz_question_id') + 1)) }}" method="post">
+                {% endif %}
+                    <div class="input-field col s12">
+                        <select name="answer">
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            {% if question.option_3 %}
+                                <option value="3">Option 3</option>
+                            {% endif %}
+                        </select>
+                        <label>Your Answer</label>
+                    </div>
+                    {% if session.get('quiz_question_id') == questions_length - 1 %}
+                        <input type="submit" class="btn btn-large indigo accent-3" value="Finish" />
+                    {% else %}
+                        <input type="submit" class="btn btn-large indigo accent-3" value="Next" />
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

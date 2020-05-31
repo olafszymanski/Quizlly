@@ -1,10 +1,11 @@
 from quizlly import db
 from quizlly.utils import remove_whitespaces
-from flask import Blueprint, render_template, session, redirect, url_for, flash
+from flask import Blueprint, render_template, session, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from .forms import CreateQuizForm, AddQuestionForm
 from .models import Quiz
 from .decorators import has_created_quiz, has_created_questions
+import json
 
 
 quizzes = Blueprint('quizzes', __name__)
@@ -42,17 +43,17 @@ def question():
     form = AddQuestionForm()
 
     if form.validate_on_submit():
-        questions = {
-            'question': remove_whitespaces(form.question.data),
-            'correct_option': 'option_' + form.correct_option.data,
-            'option_1': remove_whitespaces(form.option_1.data),
-            'option_2': remove_whitespaces(form.option_2.data),
+        question = {
+            'question': f'{remove_whitespaces(form.question.data)}',
+            'correct_option': f'option_{form.correct_option.data}',
+            'option_1': f'{remove_whitespaces(form.option_1.data)}',
+            'option_2': f'{remove_whitespaces(form.option_2.data)}',
         }
 
         if option_3 := remove_whitespaces(form.option_3.data):
-            questions['option_3'] = option_3
+            question['option_3'] = f'{option_3}'
 
-        session[f'question_{session.get("question_id")}'] = questions
+        session[f'question_{session.get("question_id")}'] = question
 
         session['question_id'] = session.get('question_id') + 1
 
@@ -72,13 +73,14 @@ def save():
     title = session.pop('title')
     description = session.pop('description')
 
-    questions = '{'
+    questions = []
     for i in range(0, session.pop('question_id')):
-        questions += str(session.pop(f'question_{i}')) + ','
+        question = str(session.pop(f'question_{i}'))
+        question = question.replace("'", '"')
 
-    questions += '}'
+        questions.append(question)
 
-    quiz = Quiz(title=title, description=description, questions=questions, user=current_user)
+    quiz = Quiz(title=title, description=description, questions=str(questions), user=current_user)
 
     db.session.add(quiz)
     db.session.commit()
@@ -86,3 +88,78 @@ def save():
     flash('Your quiz has been successfully created!', 'success')
 
     return redirect(url_for('quizzes.home'))
+
+
+@quizzes.route('/quiz/<int:quiz_id>')
+@login_required
+def quiz(quiz_id):
+    if quiz := Quiz.query.get(quiz_id):
+        session['quiz_id'] = quiz.id
+    else:
+        flash('No quiz with this id found!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+    return render_template('/quizzes/quiz.html', title='Quiz', quiz=quiz)
+
+
+@quizzes.route('/quiz/<int:quiz_id>/question/<int:question_id>', methods=['GET', 'POST'])
+@login_required
+def quiz_question(quiz_id, question_id):
+    if quiz_id != session.get('quiz_id'):
+        flash('You are trying to answer question of a test that you have not yet taken!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+    if request.method == 'POST':
+        answer = request.form.get("answer")
+        session[f'quiz_answer_{question_id - 1}'] = f'option_{answer}'
+
+    if quiz_questions := Quiz.query.get(quiz_id).questions:
+        session['quiz_questions'] = quiz_questions
+        questions = quiz_questions
+        questions = questions.replace("'", '')
+        questions = json.loads(questions)
+        session['quiz_question_id'] = question_id
+
+        if question_id >= len(questions):
+            flash('No question with this id found!', 'danger')
+
+            return redirect(url_for('quizzes.quiz', quiz_id=quiz_id))
+
+        return render_template('quizzes/quiz_question.html', title=f'Question #{question_id}', question=questions[question_id], questions_length=len(questions))
+    else:
+        flash('No quiz with this id found!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+
+@quizzes.route('/quiz/<int:quiz_id>/finish', methods=['GET', 'POST'])
+@login_required
+def quiz_finish(quiz_id):
+    if quiz_id != session.get('quiz_id'):
+        flash('You are trying to finish a test that you have not yet taken!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+    questions = session.get('quiz_questions')
+    questions = questions.replace("'", '')
+    questions = json.loads(questions)
+
+    score = 0
+
+    question_id = session.get('quiz_question_id')
+
+    if answer := request.form.get("answer")[-1]:
+        session[f'quiz_answer_{question_id}'] = answer
+        question_id += 1
+
+    for i in range(0, question_id):
+        correct_option = questions[i]['correct_option'][-1]
+        answer = session.get(f'quiz_answer_{i}')[-1]
+        if answer == correct_option:
+            score += 100
+
+    score /= len(questions)
+
+    return render_template('quizzes/quiz_finish.html', title='Finish', quiz=Quiz.query.get(quiz_id), score=int(score))
