@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <form id="form" action="" method="post" class="col s12">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="col s12 m10 l8 offset-m1 offset-l2">
+                    <h4>Question #{{ session.get('question_id') + 1 }}</h4>
+                    <div class="input-field col s12">
+                        {{ form.question.label }}
+                        {{ form.question(class='validate') }}
+                        {% if form.question.errors %}
+                            {% for error in form.question.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.option_1.label }}
+                        {{ form.option_1(class='validate') }}
+                        {% if form.option_1.errors %}
+                            {% for error in form.option_1.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.option_2.label }}
+                        {{ form.option_2(class='validate') }}
+                        {% if form.option_2.errors %}
+                            {% for error in form.option_2.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.option_3.label }}
+                        {{ form.option_3(class='validate') }}
+                        {% if form.option_3.errors %}
+                            {% for error in form.option_3.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.correct_option }}
+                        {{ form.correct_option.label }}
+                        {% if form.correct_option.errors %}
+                            {% for error in form.correct_option.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <small class="text-muted">Remember to click "Next" before saving your quiz!</small>
+                    <br>
+                    <br>
+                    <div class="row center">
+                        {{ form.submit(class='btn btn-large indigo accent-3') }}
+                        <a href="{{ url_for('quizzes.save') }}" class="btn btn-large indigo accent-3">Save</a>
+                        <a href="{{ url_for('quizzes.home') }}" class="btn btn-large red darken-4">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -19,7 +19,7 @@
     <nav>
         <div class="nav-wrapper indigo accent-3">
             <div class="container">
-                <a href="{{ url_for('main.home') }}" class="brand-logo">Quizlly</a>
+                <a href="{{ url_for('quizzes.home') }}" class="brand-logo">Quizlly</a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     {% if current_user.is_authenticated %}
@@ -35,7 +35,7 @@
     </nav>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a href="{{ url_for('main.home') }}" class="mobile-logo center">Quizlly</a></li>
+        <li><a href="{{ url_for('quizzes.home') }}" class="mobile-logo center">Quizlly</a></li>
         {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('users.account') }}"><i class="material-icons left">person</i>Account</a></li>
             <li><a href="{{ url_for('users.logout') }}"><i class="material-icons left">exit_to_app</i>Log Out</a></li>
@@ -85,6 +85,7 @@
     <script>
         $(document).ready(() => {
             $('.sidenav').sidenav();
+            $('select').formSelect();
         });
     </script>
 </body>

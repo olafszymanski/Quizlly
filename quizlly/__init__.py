@@ -14,10 +14,10 @@ def create_app(config_class=DebugConfig):
     app = Flask('quizlly')
     app.config.from_object(config_class)
 
-    from .main.views import main
+    from .quizzes.views import quizzes
     from .users.views import users
 
-    app.register_blueprint(main)
+    app.register_blueprint(quizzes)
     app.register_blueprint(users)
 
     db.init_app(app)

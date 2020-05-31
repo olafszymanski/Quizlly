@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <form action="" method="post" class="col s12">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="col s12 m10 l8 offset-m1 offset-l2">
+                    <h4>Create Quiz</h4>
+                    <div class="input-field col s12">
+                        {{ form.title.label }}
+                        {{ form.title(class='validate') }}
+                        {% if form.title.errors %}
+                            {% for error in form.title.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="input-field col s12">
+                        {{ form.description.label }}
+                        {{ form.description(class='materialize-textarea validate') }}
+                        {% if form.description.errors %}
+                            {% for error in form.description.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="row center">
+                        {{ form.submit(class='btn btn-large indigo accent-3') }}
+                        <a href="{{ url_for('quizzes.home') }}" class="btn btn-large red darken-4">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

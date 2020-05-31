@@ -1,9 +1,9 @@
 from quizlly import bcrypt, db
+from quizlly.utils import remove_whitespaces
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from .forms import SignUpForm, LogInForm, EditForm, ChangePasswordForm
 from .models import User
-from .utils import remove_whitespaces
 
 
 users = Blueprint('users', __name__)
@@ -25,7 +25,7 @@ def signup():
 
         flash('Your account has been created successfully!', 'success')
 
-        return redirect(url_for('main.home'))
+        return redirect(url_for('quizzes.home'))
 
     return render_template('users/signup.html', title='Sign Up', form=form)
 
@@ -46,11 +46,11 @@ def login():
         if user := User.query.filter_by(username=form.username_or_email.data).first():
             if validate_and_login(user):
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('main.home'))
+                return redirect(next_page) if next_page else redirect(url_for('quizzes.home'))
         elif user := User.query.filter_by(email=form.username_or_email.data).first():
             if validate_and_login(user):
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('main.home'))
+                return redirect(next_page) if next_page else redirect(url_for('quizzes.home'))
         else:
             flash('User does not exist! Please try using different credentials.', 'danger')
 
@@ -62,7 +62,7 @@ def logout():
     if current_user.is_authenticated:
         logout_user()
 
-    return redirect(url_for('main.home'))
+    return redirect(url_for('quizzes.home'))
 
 
 @users.route('/account')

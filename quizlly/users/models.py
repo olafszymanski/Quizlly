@@ -1,5 +1,6 @@
 from quizlly import db, login_manager
 from flask_login import UserMixin
+from datetime import datetime
 
 
 @login_manager.user_loader
@@ -12,6 +13,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(300))
+    quizzes = db.relationship('Quiz', backref='user', lazy=True)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 
     def __init__(self, username, email, password):
@@ -21,4 +24,4 @@ class User(db.Model, UserMixin):
 
 
     def __repr__(self):
-        return f'{self.id} {self.username}'
+        return f'User({self.id}, {self.username})'
