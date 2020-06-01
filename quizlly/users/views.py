@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from .forms import SignUpForm, LogInForm, EditForm, ChangePasswordForm
 from .models import User
+from quizlly.quizzes.models import Quiz
 
 
 users = Blueprint('users', __name__)
@@ -68,7 +69,9 @@ def logout():
 @users.route('/account')
 @login_required
 def account():
-    return render_template('users/account.html', title='Account')
+    quizzes = Quiz.query.filter_by(user=current_user)
+
+    return render_template('users/account.html', title='Account', quizzes=quizzes)
 
 
 @users.route('/account/edit', methods=['GET', 'POST'])

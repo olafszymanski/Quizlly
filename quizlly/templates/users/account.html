@@ -1,13 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row">
-        <div class="col s12 m10 l8 offset-m1 offset-l2">
+        <div class="col s12 m10 l10 offset-m1 offset-l1">
             <div class="card-panel">
                 <span class="card-title"><a href="{{ url_for('users.account') }}" class="remove-color"><b>@{{ current_user.username }}</b></a></span>
                 <h6>E-mail: <b>{{ current_user.email }}</b></h6>
                 <br>
                 <a href="{{ url_for('users.edit') }}" class="btn indigo accent-3">Edit</a>
                 <a href="{{ url_for('users.change_password') }}" class="btn indigo accent-3">Change Password</a>
+            </div>
+        </div>
+        <div class="col s12 m10 l10 offset-m1 offset-l1">
+            <div class="card-panel">
+                <span class="card-title"><b>My Quizzes ({{ quizzes.count() }})</b></span>
+                <br>
+                <br>
+                {% if quizzes.count() > 0 %}
+                    <div class="row">
+                        {% for quiz in quizzes %}
+                            <div class="col s12 m12 l6">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <span class="card-title"><b>{{ quiz.title }}</b></span>
+                                        <p>{{ quiz.description }}</p>
+                                        <br>
+                                        {% for i in range(0, quiz.rating|int) %}
+                                            <span class="material-icons">star</span>
+                                        {% endfor %}
+                                        {% if 5 - quiz.rating|int > 0 %}
+                                            {% for i in range(0, 5 - quiz.rating|int) %}
+                                                <span class="material-icons">star_border</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <br>
+                                        <small class="text-muted">By @{{ quiz.user.username }}</small>
+                                    </div>
+                                    <div class="card-action">
+                                        <a href="{{ url_for('quizzes.quiz', quiz_id=quiz.id) }}" class="btn indigo accent-3">Take</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <h5>You haven't created any quizzes yet...</h5>
+                {% endif %}
             </div>
         </div>
     </div>
