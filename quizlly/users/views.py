@@ -111,3 +111,17 @@ def change_password():
         return redirect(url_for('users.account'))
 
     return render_template('users/change_password.html', title='Change Password', form=form)
+
+
+@users.route('/profile/<int:user_id>')
+def profile(user_id):
+    if current_user.is_authenticated and current_user.id == user_id:
+        return redirect(url_for('users.account'))
+
+    user = User.query.get(user_id)
+    if user is None:
+        flash('Could not find a user with this id!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+    return render_template('users/profile.html', title='Profile', user=user, quizzes=user.quizzes)
