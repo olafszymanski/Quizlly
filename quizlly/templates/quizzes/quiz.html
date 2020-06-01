@@ -8,17 +8,19 @@
                 <small class="text-muted">By @{{ quiz.user.username }}</small>
                 <br>
                 <br>
-                {% for i in range(0, quiz.rating) %}
-                    <a href="#" class="material-icons remove-color">star</a>
+                {% for i in range(0, quiz.rating|int) %}
+                    <a href="{{ url_for('quizzes.review', quiz_id=quiz.id) }}" class="material-icons remove-color">star</a>
                 {% endfor %}
-                {% if 5 - quiz.rating > 0 %}
-                    {% for i in range(0, 5 - quiz.rating) %}
-                        <a href="#" class="material-icons remove-color">star_border</a>
+                {% if 5 - quiz.rating|int > 0 %}
+                    {% for i in range(0, 5 - quiz.rating|int) %}
+                        <a href="{{ url_for('quizzes.review', quiz_id=quiz.id) }}" class="material-icons remove-color">star_border</a>
                     {% endfor %}
                 {% endif %}
                 <br>
                 <br>
-                <a href="{{ url_for('quizzes.quiz_question', quiz_id=quiz.id, question_id=0) }}" class="btn btn-large indigo accent-3">Take</a>
+                <div class="row center">
+                    <a href="{{ url_for('quizzes.quiz_question', quiz_id=quiz.id, question_id=0) }}" class="btn btn-large indigo accent-3">Take</a>
+                </div>
             </div>
         </div>
     </div>

@@ -9,11 +9,11 @@
                         <span class="card-title"><b>{{ quiz.title }}</b></span>
                         <p>{{ quiz.description }}</p>
                         <br>
-                        {% for i in range(0, quiz.rating) %}
+                        {% for i in range(0, quiz.rating|int) %}
                             <span class="material-icons">star</span>
                         {% endfor %}
-                        {% if 5 - quiz.rating > 0 %}
-                            {% for i in range(0, 5 - quiz.rating) %}
+                        {% if 5 - quiz.rating|int > 0 %}
+                            {% for i in range(0, 5 - quiz.rating|int) %}
                                 <span class="material-icons">star_border</span>
                             {% endfor %}
                         {% endif %}

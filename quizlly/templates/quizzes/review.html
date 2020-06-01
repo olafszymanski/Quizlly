@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col s12 m10 l8 offset-m1 offset-l2">
+            <div class="card-panel">
+                <span class="card-title"><b>Quiz Review</b></span>
+                <h5>{{ quiz.title }}</h5>
+                <small class="text-muted">By @{{ quiz.user.username }}</small>
+                <br>
+                <br>
+                {% for i in range(0, quiz.rating|int) %}
+                    <span class="material-icons remove-color">star</span>
+                {% endfor %}
+                {% if 5 - quiz.rating|int > 0 %}
+                    {% for i in range(0, 5 - quiz.rating|int) %}
+                        <span class="material-icons remove-color">star_border</span>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <br>
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="input-field col s12">
+                        {{ form.review(class='validate') }}
+                        {% if form.review.errors %}
+                            {% for error in form.review.errors %}
+                                <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                        {{ form.review.label }}
+                    </div>
+                    <div class="row center">
+                        {{ form.submit(class='btn btn-large indigo accent-3') }}
+                        <a href="{{ url_for('quizzes.home') }}" class="btn btn-large red darken-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

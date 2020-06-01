@@ -2,8 +2,8 @@ from quizlly import db
 from quizlly.utils import remove_whitespaces
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from .forms import CreateQuizForm, AddQuestionForm
-from .models import Quiz
+from .forms import CreateQuizForm, AddQuestionForm, ReviewForm
+from .models import Quiz, Review
 from .decorators import has_created_quiz, has_created_questions
 import json
 
@@ -163,3 +163,34 @@ def quiz_finish(quiz_id):
     score /= len(questions)
 
     return render_template('quizzes/quiz_finish.html', title='Finish', quiz=Quiz.query.get(quiz_id), score=int(score))
+
+
+@quizzes.route('/quiz/<int:quiz_id>/review', methods=['GET', 'POST'])
+@login_required
+def review(quiz_id):
+    quiz = Quiz.query.get(quiz_id)
+    if quiz is None:
+        flash('Quiz with this id does not exist!', 'danger')
+
+        return redirect(url_for('quizzes.home'))
+
+    form = ReviewForm()
+
+    if form.validate_on_submit():
+        review = Review.query.filter_by(user=current_user).filter_by(quiz=quiz).first()
+        if review is None:
+            review = Review(stars=form.review.data, user=current_user, quiz=quiz)
+
+            db.session.add(review)
+
+            flash('Your review has been successfully added!', 'success')
+        else:
+            review.stars = form.review.data
+
+            flash('Your review has been successfully updated!', 'success')
+
+        db.session.commit()
+
+        return redirect(url_for('quizzes.home'))
+
+    return render_template('quizzes/review.html', title='Review', quiz=quiz, form=form)

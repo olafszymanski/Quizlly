@@ -28,3 +28,8 @@ class AddQuestionForm(FlaskForm):
             return False
 
         return True
+
+
+class ReviewForm(FlaskForm):
+    review = SelectField('Your Review', validators=[DataRequired()], choices=[('1', '1 Star'), ('2', '2 Star'), ('3', '3 Star'), ('4', '4 Star'), ('5', '5 Star')])
+    submit = SubmitField('Post')
