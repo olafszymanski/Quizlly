@@ -18,7 +18,7 @@
                             {% endfor %}
                         {% endif %}
                         <br>
-                        <small class="text-muted">By <a href="{{ url_for('users.account') }}" class="text-muted">@{{ quiz.user.username }}</a></small>
+                        <small class="text-muted">By <a href="{{ url_for('users.profile', user_id=quiz.user.id) }}" class="text-muted">@{{ quiz.user.username }}</a></small>
                     </div>
                     <div class="card-action">
                         <a href="{{ url_for('quizzes.quiz', quiz_id=quiz.id) }}" class="btn indigo accent-3">Take</a>

@@ -24,20 +24,9 @@
                             {% endfor %}
                         {% endif %}
                     </div>
-                    {% if not current_user.admin %}
-                        <div class="input-field col s12">
-                            {{ form.password.label }}
-                            {{ form.password(class='validate') }}
-                            {% if form.password.errors %}
-                                {% for error in form.password.errors %}
-                                    <span class="helper-text red-text" data-error="wrong">{{ error }}</span>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    {% endif %}
                     <div class="row center">
                         {{ form.submit(class='btn btn-large indigo accent-3') }}
-                        <a href="{{ url_for('users.account') }}" class="btn btn-large red darken-4">Cancel</a>
+                        <a href="{{ url_for('admin.home') }}" class="btn btn-large red darken-4">Cancel</a>
                     </div>
                 </div>
             </div>

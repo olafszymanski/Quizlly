@@ -16,9 +16,11 @@ def create_app(config_class=DebugConfig):
 
     from .quizzes.views import quizzes
     from .users.views import users
+    from .admin.views import admin_blueprint
 
     app.register_blueprint(quizzes)
     app.register_blueprint(users)
+    app.register_blueprint(admin_blueprint)
 
     db.init_app(app)
     bcrypt.init_app(app)

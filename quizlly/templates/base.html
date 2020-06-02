@@ -23,6 +23,9 @@
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     {% if current_user.is_authenticated %}
+                        {% if current_user.admin %}
+                            <li><a href="{{ url_for('admin.home') }}"><i class="material-icons left">construction</i>Admin Panel</a></li>
+                        {% endif %}
                         <li><a href="{{ url_for('users.account') }}"><i class="material-icons left">person</i>Account</a></li>
                         <li><a href="{{ url_for('users.logout') }}"><i class="material-icons left">exit_to_app</i>Log Out</a></li>
                     {% else %}
@@ -87,6 +90,7 @@
             $('.sidenav').sidenav()
             $('select').formSelect()
             $('.fixed-action-btn').floatingActionButton()
+            $('.tabs').tabs();
         });
     </script>
 </body>

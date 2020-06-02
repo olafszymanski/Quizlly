@@ -5,7 +5,7 @@
             <div class="card-panel">
                 <span class="card-title"><b>{{ quiz.title }}</b></span>
                 <h6>{{ quiz.description }}</h6>
-                <small class="text-muted">By @{{ quiz.user.username }}</small>
+                <small class="text-muted"><a href="{{ url_for('users.profile', user_id=quiz.user.id) }}" class="text-muted">By @{{ quiz.user.username }}</a></small>
                 <br>
                 <br>
                 {% for i in range(0, quiz.rating|int) %}

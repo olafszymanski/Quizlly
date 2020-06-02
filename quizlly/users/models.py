@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(300))
+    admin = db.Column(db.Boolean, default=False)
     quizzes = db.relationship('Quiz', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now())

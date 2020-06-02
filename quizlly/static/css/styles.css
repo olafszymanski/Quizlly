@@ -9,3 +9,21 @@
 .remove-color {
     color: black;
 }
+
+.tabs .tab a{
+    color: black !important;
+}
+
+.tabs .tab a:hover {
+    color: white !important;
+    background-color: #82b1ff !important;
+}
+
+.tabs .tab a.active {
+    color: white !important;
+    background-color: #3d5afe !important;
+}
+
+.tabs .indicator {
+    background-color: #3d5afe !important;
+}

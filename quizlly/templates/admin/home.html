@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col s12 m10 l10 offset-m1 offset-l1">
+            <div class="card-panel">
+                <span class="card-title"><b>Admin Panel</b></span>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs tabs-fixed-width tab-demo z-depth-1">
+                            <li class="tab col s3"><a href="#users">Users</a></li>
+                            <li class="tab col s3"><a href="#quizzes">Quizzes</a></li>
+                            <li class="tab col s3"><a href="#reviews">Reviews</a></li>
+                        </ul>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div id="users" class="col s12">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>Users ({{ users|length }})</h5></li>
+                            {% for user in users %}
+                                <li class="collection-item">
+                                    <div>
+                                        <a href="{{ url_for('users.profile', user_id=user.id) }}" class="remove-color"><b>@{{ user.username }}</b></a>
+                                        ({{ user.email }})
+                                        <span class="secondary-content">
+                                            <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="remove-color"><i class="material-icons">edit</i></a>
+                                            {% if not user.admin %}
+                                                <a href="{{ url_for('admin.remove_user', user_id=user.id) }}" class="remove-color"><i class="material-icons">remove_circle</i></a>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="quizzes" class="col s12">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>Quizzes ({{ quizzes|length }})</h5></li>
+                            {% for quiz in quizzes %}
+                                <li class="collection-item">
+                                    <div>
+                                        "<a href="{{ url_for('quizzes.quiz', quiz_id=quiz.id) }}" class="remove-color"><b>{{ quiz.title }}</b></a>"
+                                        by <a href="{{ url_for('users.profile', user_id=quiz.user.id) }}" class="remove-color">@{{ quiz.user.username }}</a>
+                                        <span class="secondary-content">
+                                            <a href="{{ url_for('admin.remove_quiz', quiz_id=quiz.id) }}" class="remove-color"><i class="material-icons">remove_circle</i></a>
+                                        </span>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="reviews" class="col s12">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>Reviews ({{ reviews|length }})</h5></li>
+                            {% for review in reviews %}
+                                <li class="collection-item">
+                                    <div>
+                                        <b>{{ review.stars }} Stars</b> on <b>{{ review.quiz.title }}</b>
+                                        by <a href="{{ url_for('users.profile', user_id=review.user.id) }}" class="remove-color"><b>@{{ review.user.username }}</b></a>
+                                        <span class="secondary-content">
+                                            <a href="{{ url_for('admin.remove_review', review_id=review.id) }}" class="remove-color"><i class="material-icons">remove_circle</i></a>
+                                        </span>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
