@@ -11,8 +11,6 @@ def is_admin(redirect_url):
             if User.query.get(current_user.id).admin:
                 return func(*args, **kwargs)
             else:
-                flash('You cannot access this page!', 'danger')
-
                 return redirect(url_for(redirect_url))
 
         return wrapper
