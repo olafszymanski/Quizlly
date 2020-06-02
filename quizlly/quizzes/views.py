@@ -165,6 +165,26 @@ def quiz_finish(quiz_id):
     return render_template('quizzes/quiz_finish.html', title='Finish', quiz=Quiz.query.get(quiz_id), score=int(score))
 
 
+@quizzes.route('/quiz/<int:quiz_id>/delete')
+@login_required
+def quiz_delete(quiz_id):
+    quiz = Quiz.query.get(quiz_id)
+    if quiz.user.id == current_user.id:
+        reviews = Review.query.filter_by(quiz=quiz).all()
+
+        for review in reviews:
+            db.session.delete(review)
+
+        db.session.delete(quiz)
+        db.session.commit()
+
+        flash('Your quiz has been successfully ', 'danger')
+    else:
+        flash('You cannot delete quiz not owned by you!', 'danger')
+
+    return redirect(url_for('quizzes.home'))
+
+
 @quizzes.route('/quiz/<int:quiz_id>/review', methods=['GET', 'POST'])
 @login_required
 def review(quiz_id):

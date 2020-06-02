@@ -20,6 +20,9 @@
                 <br>
                 <div class="row center">
                     <a href="{{ url_for('quizzes.quiz_question', quiz_id=quiz.id, question_id=0) }}" class="btn btn-large indigo accent-3">Take</a>
+                    {% if quiz.user.id == current_user.id %}
+                        <a href="{{ url_for('quizzes.quiz_delete', quiz_id=quiz.id) }}" class="btn btn-large red darken-4">Delete</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

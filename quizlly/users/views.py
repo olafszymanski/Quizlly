@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 from .forms import SignUpForm, LogInForm, EditForm, ChangePasswordForm
 from .models import User
-from quizlly.quizzes.models import Quiz
+from quizlly.quizzes.models import Quiz, Review
 
 
 users = Blueprint('users', __name__)
@@ -72,6 +72,26 @@ def account():
     quizzes = Quiz.query.filter_by(user=current_user)
 
     return render_template('users/account.html', title='Account', quizzes=quizzes)
+
+
+@users.route('/account/delete')
+@login_required
+def delete():
+    quizzes = Quiz.query.filter_by(user=current_user).all()
+    reviews = Review.query.filter_by(user=current_user).all()
+
+    db.session.delete(current_user)
+    for quiz in quizzes:
+        db.session.delete(quiz)
+    for review in reviews:
+        db.session.delete(review)
+
+    db.session.delete(current_user)
+    db.session.commit()
+
+    flash('Your account has been successfully deleted!', 'success')
+
+    return redirect(url_for('quizzes.home'))
 
 
 @users.route('/account/edit', methods=['GET', 'POST'])
