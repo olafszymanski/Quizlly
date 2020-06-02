@@ -6,9 +6,9 @@ from .models import User
 
 
 class SignUpForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=6, max=30)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=5, max=30)])
     email = StringField('E-mail', validators=[DataRequired(), Length(min=5, max=100), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=300)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=300)])
     repeat_password = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
@@ -25,14 +25,14 @@ class SignUpForm(FlaskForm):
 
 class LogInForm(FlaskForm):
     username_or_email = StringField('Username or E-mail', validators=[DataRequired(), Length(min=5, max=100)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=300)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=300)])
     submit = SubmitField('Log In')
 
 
 class EditForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=6, max=30)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=5, max=30)])
     email = StringField('E-mail', validators=[DataRequired(), Length(min=5, max=100), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=300)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=300)])
     submit = SubmitField('Save')
 
 
@@ -49,6 +49,6 @@ class EditForm(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=300)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=300)])
     repeat_password = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Save')
